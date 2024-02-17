@@ -6,6 +6,41 @@ Get your projects off the ground faster! `batteries` fills out lua's sparse stan
 
 General purpose and special case, extensively documented in-line, and around a hundred kilobytes uncompressed - including the license and this readme - so you get quite a lot per byte! Of course, feel free to trim it down for your use case as required (see [below](#stripping-down-batteries)).
 
+## Fork changes
+
+Changes that I made to this library:
+
+### functional
+* Merged with functionality from [lume](https://github.com/rxi/lume) to allow for tables as alternatives to functions
+```lua
+local t = {{a = true}, { a = true }, { a = false}, { a = false}}
+local filtered = functional.filter(t, {a = true})
+print(#filtered) -- 2
+```
+* Add alias `functional.reject` for `functional.remove_if`.
+* Add `functional.match` as altenative to `functional.find_match`.
+
+### tablex
+* Add alias `tablex.first` for `tablex.front`.
+* Add alias `tablex.last` for `tablex.back`.
+* Add alias `tablex.random` for `tablex.pick_random`.
+* Add `tablex.invert` to invert the keys and values of a table.
+* Change `tablex.dedupe` to use `tablex.invert`.
+* Add alias `tablex.unique` for `tablex.dedupe`.
+* Add `tablex.pick_random_unique` which returns a function that gives a random value from the table not equal to the previous value.
+* Add `tablex.pick_weighted_random_auto` which returns a function that gives a random value from the table based on the values that have appeared in previous calls.
+
+### mathx
+* Change `mathx.rotate` to `mathx.orbit` to free up the function name.
+* Add new `mathx.rotate` to move an angle towards another angle
+* Add `mathx.random_bool` to return a random boolean value.
+* Add alias `mathx.coin` for `mathx.random_bool`.
+* Add `mathx.random_unique` which returns a function that gives a random value not equal to the previous value.
+* Add `mathx.random_weighted_auto` which returns a function that gives a random value based on the values that have appeared in previous calls.
+* Add `mathx.random_bool_weighted_auto` which returns a function that gives a random boolean value based on the values that have appeared in previous calls.
+* Add alias `mathx.coin_weighted` for `mathx.random_bool_weighted_auto`.
+
+
 # Getting Started
 
 ## How does `that module` work?
