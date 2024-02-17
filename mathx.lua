@@ -162,6 +162,82 @@ function mathx.random_lerp(min, max, rng)
 	return mathx.lerp(min, max, _random(rng))
 end
 
+function mathx.random_bool()
+	return math.random() < 0.5
+end
+
+--alias
+mathx.coin = mathx.random_bool
+
+--return a function that returns a random integer between two integers (inclusive)
+--but never the same value twice in a row
+function mathx.random_unique(a, b)
+	local last = nil
+	return function()
+		local v
+		repeat
+			v = math.random(a, b)
+		until v ~= last
+		last = v
+		return v
+	end
+end
+
+--return a function that returns a random integer between two integers (inclusive)
+--but decreasing the chance of the same value reappearing
+function mathx.random_weighted_auto(a, b, decr)
+	local weights = {}
+	local total = 0
+	local last = nil
+
+	for i = a, b do
+		weights[i] = 1
+		total = total + weights[i]
+	end
+
+	return function()
+		if last then
+			local decrease_amount = weights[last] * decr
+			weights[last] = weights[last] - decrease_amount
+			total = total - decrease_amount
+
+			local distribute_amount = decrease_amount / (b - a)
+			for i = a, b do
+				if i ~= last then
+					weights[i] = weights[i] + distribute_amount
+					total = total + distribute_amount
+				end
+			end
+		end
+
+		local rand = math.random() * total
+		local sum = 0
+		local value
+
+		for i = a, b do
+			sum = sum + weights[i]
+			if rand <= sum then
+				value = i
+				break
+			end
+		end
+
+		last = value
+
+		return value
+	end
+end
+
+function mathx.random_bool_weighted_auto(decr)
+	local f = mathx.random_weighted(0, 1, decr)
+	return function()
+		return f() == 0
+	end
+end
+
+--alias
+mathx.coin_weighted = mathx.random_bool_weighted_auto
+
 --nan checking
 function mathx.isnan(v)
 	return v ~= v

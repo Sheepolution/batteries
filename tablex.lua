@@ -220,6 +220,27 @@ end
 -- alias
 tablex.random = tablex.pick_random
 
+--pick a random value from a table (or nil if it's empty)
+--but never the same value twice in a row
+function tablex.pick_random_unique(t)
+	local last = nil
+	return function()
+		if #t == 0 then
+			return nil
+		end
+
+		local v
+		repeat
+			v = math.random(1, #t)
+		until v ~= last
+		last = v
+		return t[v]
+	end
+end
+
+-- alias
+tablex.random_unique = tablex.pick_random
+
 --take a random value from a table (or nil if it's empty)
 function tablex.take_random(t, r)
 	if #t == 0 then
@@ -253,6 +274,63 @@ function tablex.pick_weighted_random(t, w, r)
 	end
 	--shouldn't get here but safety if using a random that returns >= 1
 	return tablex.back(t)
+end
+
+function tablex.pick_weighted_random_auto(t, decr)
+	local weights = {}
+	local total = 0
+	local lastPicked = nil
+
+	-- Initialize or reinitialize weights to match the size of t
+	local function initWeights()
+		total = 0
+		for i = 1, #t do
+			weights[i] = weights[i] or 1 -- Initialize if new, preserve if existing
+			total = total + weights[i]
+		end
+		-- Adjust for any removed items
+		for i = #t + 1, #weights do
+			weights[i] = nil
+		end
+	end
+
+	return function()
+		-- Adjust weights if t size has changed
+		if #weights ~= #t then
+			initWeights()
+		end
+
+		if #t == 0 then return nil end -- Return nil if the table is empty
+
+		if lastPicked and weights[lastPicked] then
+			local decreaseAmount = weights[lastPicked] * decr
+			weights[lastPicked] = weights[lastPicked] - decreaseAmount
+			total = total - decreaseAmount
+
+			local distributeAmount = decreaseAmount / (#t - 1)
+			for i = 1, #t do
+				if i ~= lastPicked then
+					weights[i] = weights[i] + distributeAmount
+					total = total + distributeAmount
+				end
+			end
+		end
+
+		local rand = math.random() * total
+		local sum = 0
+		local pickedIndex
+
+		for i = 1, #t do
+			sum = sum + weights[i]
+			if rand <= sum then
+				pickedIndex = i
+				break
+			end
+		end
+
+		lastPicked = pickedIndex
+		return t[pickedIndex], pickedIndex -- Return the picked item and its index
+	end
 end
 
 --shuffle the order of a table
