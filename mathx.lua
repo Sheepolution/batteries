@@ -207,11 +207,22 @@ function mathx.lerp_angle_eps(a, b, t, eps)
 	return v
 end
 
+--rotate an angle towards another by a given amount
+function mathx.rotate(a1, a2, v)
+	if a1 == a2 then return a1 end
+	local diff = mathx.angle_difference(a1, a2)
+	if math.abs(diff) < math.abs(v) then
+		return a2
+	else
+		return mathx.normalise_angle(a1 + diff / math.abs(diff) * v)
+	end
+end
+
 --geometric functions standalone/"unpacked" components and multi-return
 --consider using vec2 if you need anything complex!
 
---rotate a point around the origin by an angle
-function mathx.rotate(x, y, r)
+--orbit a point around the origin by an angle
+function mathx.orbit(x, y, r)
 	local s = math.sin(r)
 	local c = math.cos(r)
 	return c * x - s * y, s * x + c * y
