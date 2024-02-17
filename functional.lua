@@ -24,9 +24,51 @@ local functional = setmetatable({}, {
 	__index = tablex,
 })
 
+local identity = function(x)
+	return x
+end
+
+local absindex = function(len, i)
+	return i < 0 and (len + i + 1) or i
+end
+
+local iscallable = function(x)
+	if type(x) == "function" then return true end
+	local mt = getmetatable(x)
+	return mt and mt.__call ~= nil
+end
+
+local getiter = function(x)
+	if functional.isarray(x) then
+		return ipairs
+	elseif type(x) == "table" then
+		return pairs
+	end
+	error("expected table", 3)
+end
+
+local iteratee = function(x)
+	if x == nil then return identity end
+	if iscallable(x) then return x end
+	if type(x) == "table" then
+		return function(z)
+			for k, v in pairs(x) do
+				if z[k] ~= v then return false end
+			end
+			return true
+		end
+	end
+	return function(z) return z[x] end
+end
+
 --the identity function
 function functional.identity(v)
 	return v
+end
+
+-- check if value is an array
+function functional.is_array(x)
+	return (type(x) == "table" and x[1] ~= nil) and true or false
 end
 
 --simple sequential iteration, f is called for all elements of t
@@ -306,7 +348,7 @@ functional.map_cycle = functional.cycle
 function functional.chain(t, f)
 	local result = {}
 	for i = 2, #t do
-		local a = t[i-1]
+		local a = t[i - 1]
 		local b = t[i]
 		local v = f(a, b)
 		if v ~= nil then
@@ -359,43 +401,50 @@ end
 
 --true if any element of the table matches f
 function functional.any(t, f)
-	for i = 1, #t do
-		if f(t[i], i) then
-			return true
-		end
+	f = iteratee(f)
+	local iter = getiter(t)
+	for _, v in iter(t) do
+		if f(v) then return true end
 	end
 	return false
 end
 
 --true if no element of the table matches f
 function functional.none(t, f)
-	for i = 1, #t do
-		if f(t[i], i) then
-			return false
-		end
+	f = iteratee(f)
+	local iter = getiter(t)
+	for _, v in iter(t) do
+		if f(v) then return false end
 	end
 	return true
 end
 
 --true if all elements of the table match f
 function functional.all(t, f)
-	for i = 1, #t do
-		if not f(t[i], i) then
-			return false
-		end
+	f = iteratee(f)
+	local iter = getiter(t)
+	for _, v in iter(t) do
+		if not f(v) then return false end
 	end
 	return true
 end
 
 --counts the elements of t that match f
 function functional.count(t, f)
-	local c = 0
-	for i = 1, #t do
-		if f(t[i], i) then
-			c = c + 1
+	local count = 0
+	local iter = getiter(t)
+	if f then
+		f = iteratee(f)
+		for _, v in iter(t) do
+			if f(v) then count = count + 1 end
 		end
+	else
+		if functional.isarray(t) then
+			return #t
+		end
+		for _ in iter(t) do count = count + 1 end
 	end
-	return c
+	return count
 end
 
 --counts the elements of t equal to v
@@ -411,10 +460,9 @@ end
 
 --true if the table contains element e
 function functional.contains(t, e)
-	for i = 1, #t do
-		if t[i] == e then
-			return true
-		end
+	local iter = getiter(t)
+	for _, v in iter(t) do
+		if v == e then return true end
 	end
 	return false
 end
@@ -473,9 +521,10 @@ end
 function functional.find_min(t, f)
 	local current = nil
 	local current_min = math.huge
+	local is_function = type(f) == "function"
 	for i = 1, #t do
 		local e = t[i]
-		local v = f(e, i)
+		local v = is_function and f(e, i) or e[f]
 		if v and v < current_min then
 			current_min = v
 			current = e
@@ -489,9 +538,10 @@ end
 function functional.find_max(t, f)
 	local current = nil
 	local current_max = -math.huge
+	local is_function = type(f) == "function"
 	for i = 1, #t do
 		local e = t[i]
-		local v = f(e, i)
+		local v = is_function and f(e, i) or e[f]
 		if v and v > current_max then
 			current_max = v
 			current = e
@@ -508,9 +558,10 @@ functional.find_best = functional.find_max
 function functional.find_nearest(t, f, target)
 	local current = nil
 	local current_min = math.huge
+	local is_function = type(f) == "function"
 	for i = 1, #t do
 		local e = t[i]
-		local v = math.abs(f(e, i) - target)
+		local v = is_function and f(e, i) or e[f]
 		if v and v < current_min then
 			current_min = v
 			current = e
@@ -524,11 +575,10 @@ end
 
 --return the first element of the table that results in a true filter
 function functional.find_match(t, f)
-	for i = 1, #t do
-		local v = t[i]
-		if f(v) then
-			return v
-		end
+	f = iteratee(f)
+	local iter = getiter(t)
+	for k, v in iter(t) do
+		if f(v) then return v, k end
 	end
 	return nil
 end
