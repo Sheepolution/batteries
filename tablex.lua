@@ -25,10 +25,16 @@ function tablex.front(t)
 	return t[1]
 end
 
+--alias
+tablex.first = tablex.front
+
 --return the back element of a table
 function tablex.back(t)
 	return t[#t]
 end
+
+--alias
+tablex.last = tablex.back
 
 --remove the back element of a table and return it
 function tablex.pop(t)
@@ -211,6 +217,9 @@ function tablex.pick_random(t, r)
 	return t[tablex.random_index(t, r)]
 end
 
+-- alias
+tablex.random = tablex.pick_random
+
 --take a random value from a table (or nil if it's empty)
 function tablex.take_random(t, r)
 	if #t == 0 then
@@ -317,7 +326,6 @@ function tablex.compact(t, range)
 		error("tablex.compact - range must be a number or table", 2)
 	end
 	return r
-
 end
 
 --append sequence t2 into t1, modifying t1
@@ -338,19 +346,25 @@ function tablex.append(t1, ...)
 	return r
 end
 
---return a copy of a sequence with all duplicates removed
---	causes a little "extra" gc churn of one table to track the duplicates internally
-function tablex.dedupe(t)
-	local seen = {}
+function tablex.invert(t)
 	local r = {}
-	for i, v in ipairs(t) do
-		if not seen[v] then
-			seen[v] = true
-			table.insert(r, v)
-		end
+	for k, v in pairs(t) do
+		r[v] = k
 	end
 	return r
 end
+
+--return a copy of a sequence with all duplicates removed
+function tablex.dedupe(t)
+	local r = {}
+	for k in pairs(tablex.invert(t)) do
+		r[#r + 1] = k
+	end
+	return r
+end
+
+--alias
+tablex.unique = tablex.dedupe
 
 --(might already exist depending on environment)
 if not tablex.clear then
@@ -615,6 +629,5 @@ function tablex.spairs(t, less)
 		end
 	end
 end
-
 
 return tablex

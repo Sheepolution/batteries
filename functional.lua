@@ -1,3 +1,4 @@
+---@diagnostic disable: redundant-parameter
 --[[
 	functional programming facilities
 
@@ -177,19 +178,25 @@ end
 
 --filters a sequence
 -- returns a table containing items where f(v, i) returns truthy
-function functional.filter(t, f)
-	local result = {}
-	for i = 1, #t do
-		local v = t[i]
-		if f(v, i) then
-			table.insert(result, v)
+function functional.filter(t, f, retainkeys)
+	f = iteratee(f)
+	local iter = getiter(t)
+	local r = {}
+	if retainkeys then
+		for k, v in iter(t) do
+			if f(v, k) then r[k] = v end
+		end
+	else
+		for _, v in iter(t) do
+			if f(v, _) then r[#r + 1] = v end
 		end
 	end
-	return result
+	return r
 end
 
 --filters a sequence in place, modifying it
 function functional.filter_inplace(t, f)
+	f = iteratee(f)
 	local write_i = 0
 	local n = #t --cache, so splitting the sequence doesn't stop iteration
 	for i = 1, n do
@@ -218,6 +225,9 @@ function functional.remove_if(t, f)
 	end
 	return result
 end
+
+--alias
+functional.reject = functional.remove_if
 
 --partitions a sequence into two, based on filter criteria
 --simultaneous filter and remove_if
@@ -582,5 +592,8 @@ function functional.find_match(t, f)
 	end
 	return nil
 end
+
+--alias
+functional.match = functional.find_match
 
 return functional
