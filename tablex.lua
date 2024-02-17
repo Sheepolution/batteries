@@ -229,6 +229,10 @@ function tablex.pick_random_unique(t)
 			return nil
 		end
 
+		if #t == 1 then
+			return t[1]
+		end
+
 		local v
 		repeat
 			v = math.random(1, #t)
@@ -279,57 +283,56 @@ end
 function tablex.pick_weighted_random_auto(t, decr)
 	local weights = {}
 	local total = 0
-	local lastPicked = nil
+	local last = nil
 
-	-- Initialize or reinitialize weights to match the size of t
 	local function initWeights()
 		total = 0
 		for i = 1, #t do
-			weights[i] = weights[i] or 1 -- Initialize if new, preserve if existing
+			weights[i] = weights[i] or 1
 			total = total + weights[i]
 		end
-		-- Adjust for any removed items
+
 		for i = #t + 1, #weights do
 			weights[i] = nil
 		end
 	end
 
 	return function()
-		-- Adjust weights if t size has changed
 		if #weights ~= #t then
 			initWeights()
 		end
 
-		if #t == 0 then return nil end -- Return nil if the table is empty
+		if #t == 0 then return nil end
+		if #t == 1 then return t[1] end
 
-		if lastPicked and weights[lastPicked] then
-			local decreaseAmount = weights[lastPicked] * decr
-			weights[lastPicked] = weights[lastPicked] - decreaseAmount
-			total = total - decreaseAmount
+		if last and weights[last] then
+			local decrease = weights[last] * decr
+			weights[last] = weights[last] - decrease
+			total = total - decrease
 
-			local distributeAmount = decreaseAmount / (#t - 1)
+			local distribute = decrease / (#t - 1)
 			for i = 1, #t do
-				if i ~= lastPicked then
-					weights[i] = weights[i] + distributeAmount
-					total = total + distributeAmount
+				if i ~= last then
+					weights[i] = weights[i] + distribute
+					total = total + distribute
 				end
 			end
 		end
 
 		local rand = math.random() * total
 		local sum = 0
-		local pickedIndex
+		local picked
 
 		for i = 1, #t do
 			sum = sum + weights[i]
 			if rand <= sum then
-				pickedIndex = i
+				picked = i
 				break
 			end
 		end
 
-		lastPicked = pickedIndex
-		return t[pickedIndex], pickedIndex -- Return the picked item and its index
+		last = picked
+		return t[picked], picked
 	end
 end
 

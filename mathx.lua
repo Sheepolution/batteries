@@ -174,6 +174,7 @@ mathx.coin = mathx.random_bool
 function mathx.random_unique(a, b)
 	local last = nil
 	return function()
+		if a == b then return a end
 		local v
 		repeat
 			v = math.random(a, b)
@@ -196,6 +197,7 @@ function mathx.random_weighted_auto(a, b, decr)
 	end
 
 	return function()
+		if a == b then return a end
 		if last then
 			local decrease_amount = weights[last] * decr
 			weights[last] = weights[last] - decrease_amount
