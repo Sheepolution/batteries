@@ -39,6 +39,7 @@ print(#filtered) -- 2
 
 ### stringx
 * Add `stringx.interpolate` to interpolate a string with a table.
+* Add `stringx.sentence_case` to convert a string to sentence case.
 * Add `stringx.clock` to convert seconds into a clock format.
 
 ### random (new)

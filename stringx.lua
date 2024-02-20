@@ -297,6 +297,14 @@ function stringx.title_case(s)
 	return s
 end
 
+--sentence case a string
+--"quick brown fox" becomes "Quick brown fox"
+function stringx.sentence_case(s)
+	s = s:gsub("^%l", string.upper)
+
+	return s
+end
+
 -- "quick {1} {2}" {"brown", "fox"} -> "quick brown fox"
 function stringx.interpolate(str, vars)
 	if not vars then return str end
