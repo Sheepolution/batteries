@@ -29,6 +29,7 @@ print(#filtered) -- 2
 * Add alias `tablex.unique` for `tablex.dedupe`.
 * Add `tablex.pick_random_unique` which returns a function that gives a random value from the table not equal to the previous value.
 * Add `tablex.pick_weighted_random_auto` which returns a function that gives a random value from the table based on the values that have appeared in previous calls.
+* Add `tablex.slice` to return a slice of a table.
 
 ### mathx
 * Change `mathx.rotate` to `mathx.orbit` to free up the function name.

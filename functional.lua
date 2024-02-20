@@ -29,10 +29,6 @@ local identity = function(x)
 	return x
 end
 
-local absindex = function(len, i)
-	return i < 0 and (len + i + 1) or i
-end
-
 local iscallable = function(x)
 	if type(x) == "function" then return true end
 	local mt = getmetatable(x)

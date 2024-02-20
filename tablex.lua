@@ -188,6 +188,20 @@ function tablex.next_element(t, v)
 	return t[i]
 end
 
+local absindex = function(len, i)
+	return i < 0 and (len + i + 1) or i
+end
+
+function tablex.slice(t, i, j)
+	i = i and absindex(#t, i) or 1
+	j = j and absindex(#t, j) or #t
+	local rtn = {}
+	for x = i < 1 and 1 or i, j > #t and #t or j do
+		rtn[#rtn + 1] = t[x]
+	end
+	return rtn
+end
+
 --note: keyed versions of the above aren't required; you can't double
 --up values under keys
 
