@@ -30,10 +30,12 @@ print(#filtered) -- 2
 * Add `tablex.pick_random_unique` which returns a function that gives a random value from the table not equal to the previous value.
 * Add `tablex.pick_weighted_random_auto` which returns a function that gives a random value from the table based on the values that have appeared in previous calls.
 * Add `tablex.slice` to return a slice of a table.
+* Add `tablex.mod` to apply modulo to the index of a table and return the value at that index.
 
 ### mathx
 * Change `mathx.rotate` to `mathx.orbit` to free up the function name.
 * Add new `mathx.rotate` to move an angle towards another angle
+* Add `mathx.mod` to return the modulo from 1 to max + 1 rather than 0 to max.
 
 ### stringx
 * Add `stringx.interpolate` to interpolate a string with a table.

@@ -11,6 +11,10 @@ function mathx.wrap(v, lo, hi)
 	return (v - lo) % (hi - lo) + lo
 end
 
+function mathx.mod(v, max)
+	return ((v - 1) % max) + 1
+end
+
 --wrap i around the indices of t
 function mathx.wrap_index(i, t)
 	return math.floor(mathx.wrap(i, 1, #t + 1))

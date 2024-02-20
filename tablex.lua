@@ -192,6 +192,10 @@ local absindex = function(len, i)
 	return i < 0 and (len + i + 1) or i
 end
 
+function tablex.mod(t, i)
+	return t[((i - 1) % #t) + 1]
+end
+
 function tablex.slice(t, i, j)
 	i = i and absindex(#t, i) or 1
 	j = j and absindex(#t, j) or #t
