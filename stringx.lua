@@ -314,6 +314,29 @@ function stringx.interpolate(str, vars)
 	return (str:gsub("{(.-)}", f))
 end
 
+function stringx.convert(str, typ)
+	if not typ then return stringx.convert_auto(str) end
+	if typ == "string" then return str end
+	if typ == "number" then return tonumber(str) end
+	if typ == "bool" then return str == "true" end
+	if typ == "table" or type == "function" then return (loadstring or load)("return" .. str)() end
+	return nil
+end
+
+function stringx.convert_auto(str)
+	if str == nil then return nil end
+	local a
+	a = tonumber(str)
+	if a then return a end
+	if type(str) == "boolean" then return str end
+	if str == "true" then return true end
+	if str == "false" then return false end
+	a = rawget(_G, str)
+	if a ~= nil then return a end
+	if str:sub(1, 1) == "{" or str:find("function") then return (loadstring or load)("return " .. str)() end
+	return str
+end
+
 -- "423" "mm:ss" -> "07:03"
 function stringx.clock(seconds, format)
 	seconds = tonumber(seconds) or 0
