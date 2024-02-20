@@ -306,4 +306,42 @@ function stringx.interpolate(str, vars)
 	return (str:gsub("{(.-)}", f))
 end
 
+-- "423" "mm:ss" -> "07:03"
+function stringx.clock(seconds, format)
+	seconds = tonumber(seconds) or 0
+	seconds = math.floor(seconds)
+	if seconds <= 0 then
+		return format:gsub("[HMSm]+", "0")
+	end
+
+	local hours = math.floor(seconds / 3600)
+	local mins = math.floor((seconds % 3600) / 60)
+	local secs = seconds % 60
+	local millis = math.floor((seconds - math.floor(seconds)) * 1000)
+
+	local replacements_double = {
+		HH = function() return string.format("%02d", hours) end,
+		MM = function() return string.format("%02d", mins) end,
+		SS = function() return string.format("%02d", secs) end,
+		mm = function() return string.format("%02d", millis) end,
+	}
+
+	local replacements_single = {
+		H = function() return string.format("%d", hours) end,
+		M = function() return string.format("%d", mins) end,
+		S = function() return string.format("%d", secs) end,
+		m = function() return string.format("%d", millis / 10) end,
+	}
+
+	for placeholder, func in pairs(replacements_double) do
+		format = format:gsub(placeholder, func())
+	end
+
+	for placeholder, func in pairs(replacements_single) do
+		format = format:gsub(placeholder, func())
+	end
+
+	return format
+end
+
 return stringx
