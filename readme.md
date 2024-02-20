@@ -34,15 +34,19 @@ print(#filtered) -- 2
 ### mathx
 * Change `mathx.rotate` to `mathx.orbit` to free up the function name.
 * Add new `mathx.rotate` to move an angle towards another angle
-* Add `mathx.random_bool` to return a random boolean value.
-* Add alias `mathx.coin` for `mathx.random_bool`.
-* Add `mathx.random_unique` which returns a function that gives a random value not equal to the previous value.
-* Add `mathx.random_weighted_auto` which returns a function that gives a random value based on the values that have appeared in previous calls.
-* Add `mathx.random_bool_weighted_auto` which returns a function that gives a random boolean value based on the values that have appeared in previous calls.
-* Add alias `mathx.coin_weighted` for `mathx.random_bool_weighted_auto`.
 
 ### stringx
 * Add `stringx.interpolate` to interpolate a string with a table.
+
+### random (new)
+* Add `random` module for shorter access to random functions.
+* Add basic random functions like `int`, `float`, `bool`.
+* Add `random.unique` which returns a function that gives a random value not equal to the previous value.
+* Add `random.weighted` which return a random value based on the weights of the values.
+* Add `random.weighted_auto` which returns a function that gives a random value based on the values that have appeared in previous calls.
+* Add `random.chance` which returns true or false based on a percentage.
+* Add `random.chance_auto` which returns a function that gives a random boolean value based on the values that have appeared in previous calls.
+
 
 # Getting Started
 

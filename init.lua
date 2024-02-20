@@ -6,7 +6,7 @@
 
 local path = ...
 local function require_relative(p)
-	return require(table.concat({path, p}, "."))
+	return require(table.concat({ path, p }, "."))
 end
 
 --build the module
@@ -23,6 +23,7 @@ local _batteries = {
 	sort = require_relative("sort"),
 	--
 	functional = require_relative("functional"),
+	random = require_relative("random"),
 	--collections
 	sequence = require_relative("sequence"),
 	set = require_relative("set"),
@@ -45,11 +46,11 @@ local _batteries = {
 
 --assign aliases
 for _, alias in ipairs({
-	{"mathx", "math"},
-	{"tablex", "table"},
-	{"stringx", "string"},
-	{"sort", "stable_sort"},
-	{"colour", "color"},
+	{ "mathx",   "math" },
+	{ "tablex",  "table" },
+	{ "stringx", "string" },
+	{ "sort",    "stable_sort" },
+	{ "colour",  "color" },
 }) do
 	_batteries[alias[2]] = _batteries[alias[1]]
 end
@@ -87,19 +88,18 @@ function _batteries:export()
 	return self
 end
 
-
 --convert naming, for picky eaters
 --experimental, let me know how it goes
 function _batteries:camelCase()
 	--not part of stringx for now, because it's not necessarily utf8 safe
 	local function capitalise(s)
-		local head = s:sub(1,1)
+		local head = s:sub(1, 1)
 		local tail = s:sub(2)
 		return head:upper() .. tail
 	end
 
 	--any acronyms to fully capitalise to avoid "Rgb" and the like
-	local acronyms = _batteries.set{"rgb", "rgba", "argb", "hsl", "xy", "gc", "aabb",}
+	local acronyms = _batteries.set { "rgb", "rgba", "argb", "hsl", "xy", "gc", "aabb", }
 	local function caps_acronym(s)
 		if acronyms:has(s) then
 			s = s:upper()
@@ -122,7 +122,7 @@ function _batteries:camelCase()
 	for _, k in ipairs(_batteries.tablex.keys(self)) do
 		local v = self[k]
 		if
-			--only convert string properties
+		--only convert string properties
 			type(k) == "string"
 			--ignore private and metamethod properties
 			and not _batteries.stringx.starts_with(k, "_")
