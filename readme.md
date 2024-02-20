@@ -41,6 +41,7 @@ print(#filtered) -- 2
 ### random (new)
 * Add `random` module for shorter access to random functions.
 * Add basic random functions like `int`, `float`, `bool`.
+* Add `random.angle` to return a random angle between `-math.pi` and `math.pi`.
 * Add `random.unique` which returns a function that gives a random value not equal to the previous value.
 * Add `random.weighted` which return a random value based on the weights of the values.
 * Add `random.weighted_auto` which returns a function that gives a random value based on the values that have appeared in previous calls.

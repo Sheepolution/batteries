@@ -95,6 +95,10 @@ function random.index(t, rng)
     return _random(rng, 1, #t)
 end
 
+function random.angle()
+    return -math.pi + _random() * math.pi * 2
+end
+
 --return a function that returns a random integer between two integers (inclusive)
 --but never the same value twice in a row
 function random.unique(a, b, rng)
@@ -110,7 +114,7 @@ function random.unique(a, b, rng)
     end
 end
 
--- return
+-- return a value based on a table of weights
 function random.weighted(w, rng)
     local iter = w[1] and ipairs or pairs
     local sum = 0
