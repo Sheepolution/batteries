@@ -63,6 +63,15 @@ function functional.identity(v)
 	return v
 end
 
+function functional.is(v, ...)
+	for i, x in ipairs({ ... }) do
+		if v == x then
+			return true
+		end
+	end
+	return false
+end
+
 -- check if value is an array
 function functional.is_array(x)
 	return (type(x) == "table" and x[1] ~= nil) and true or false
