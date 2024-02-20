@@ -70,7 +70,7 @@ function stringx.split(self, delim, limit)
 	--collect substrings
 	i = 1
 	for si, j in ipairs(res) do
-		res[si] = self:sub(i, j-1)
+		res[si] = self:sub(i, j - 1)
 		i = j + delim_length
 	end
 	--add the final section
@@ -291,10 +291,19 @@ end
 --titlizes a string
 --"quick brown fox" becomes "Quick Brown Fox"
 function stringx.title_case(s)
-    s = s:gsub("%s%l", string.upper)
-    s = s:gsub("^%l", string.upper)
+	s = s:gsub("%s%l", string.upper)
+	s = s:gsub("^%l", string.upper)
 
-    return s
+	return s
+end
+
+-- "quick {1} {2}" {"brown", "fox"} -> "quick brown fox"
+function stringx.interpolate(str, vars)
+	if not vars then return str end
+	local f = function(x)
+		return tostring(vars[x] or vars[tonumber(x)] or "{" .. x .. "}")
+	end
+	return (str:gsub("{(.-)}", f))
 end
 
 return stringx

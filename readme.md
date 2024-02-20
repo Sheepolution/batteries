@@ -41,6 +41,8 @@ print(#filtered) -- 2
 * Add `mathx.random_bool_weighted_auto` which returns a function that gives a random boolean value based on the values that have appeared in previous calls.
 * Add alias `mathx.coin_weighted` for `mathx.random_bool_weighted_auto`.
 
+### stringx
+* Add `stringx.interpolate` to interpolate a string with a table.
 
 # Getting Started
 
