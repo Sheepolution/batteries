@@ -31,6 +31,7 @@ print(#filtered) -- 2
 * Add alias `tablex.unique` for `tablex.dedupe`.
 * Add `tablex.pick_random_unique` which returns a function that gives a random value from the table not equal to the previous value.
 * Add `tablex.pick_weighted_random_auto` which returns a function that gives a random value from the table based on the values that have appeared in previous calls.
+* Add `tablex.pick_random_unique_weighted` which returns a function that gives a random value from the table based on the values that have appeared in previous calls, not equal to the previous value.
 * Add `tablex.slice` to return a slice of a table.
 * Add `tablex.mod` to apply modulo to the index of a table and return the value at that index.
 
@@ -52,6 +53,7 @@ print(#filtered) -- 2
 * Add `random.unique` which returns a function that gives a random value not equal to the previous value.
 * Add `random.weighted` which return a random value based on the weights of the values.
 * Add `random.weighted_auto` which returns a function that gives a random value based on the values that have appeared in previous calls.
+* Add `random.unique_weighted` which returns a function that gives a random value based on the values that have appeared in previous calls, not equal to the previous value.
 * Add `random.chance` which returns true or false based on a percentage.
 * Add `random.chance_auto` which returns a function that gives a random boolean value based on the values that have appeared in previous calls.
 

@@ -261,7 +261,7 @@ function tablex.pick_random_unique(t)
 end
 
 -- alias
-tablex.random_unique = tablex.pick_random
+tablex.random_unique = tablex.pick_random_unique
 
 --take a random value from a table (or nil if it's empty)
 function tablex.take_random(t, r)
@@ -353,6 +353,30 @@ function tablex.pick_weighted_random_auto(t, decr)
 		return t[picked], picked
 	end
 end
+
+function tablex.pick_random_unique_weighted(t, decr)
+	local f = tablex.pick_weighted_random_auto(t, decr)
+	local last = nil
+	return function()
+		if #t == 0 then
+			return nil
+		end
+
+		if #t == 1 then
+			return t[1]
+		end
+
+		local v
+		repeat
+			v = f()
+		until v ~= last
+		last = v
+		return v
+	end
+end
+
+--alias
+tablex.random_unique_weighted = tablex.pick_random_unique_weighted
 
 --shuffle the order of a table
 function tablex.shuffle(t, r)

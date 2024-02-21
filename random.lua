@@ -136,7 +136,7 @@ function random.weighted_auto(a, b, decr, rng)
     local weights = {}
     local total = 0
     local last = nil
-    local decr = decr or 0.5
+    decr = decr or 0.5
 
     for i = a, b do
         weights[i] = 1
@@ -174,6 +174,23 @@ function random.weighted_auto(a, b, decr, rng)
         last = value
 
         return value
+    end
+end
+
+--return a function that returns a random integer between two integers (inclusive)
+--but decreasing the chance of the same value reappearing
+--and never the same value twice in a row
+function random.unique_weighted(a, b, decr, rng)
+    local f = random.weighted_auto(a, b, decr, rng)
+    local last = nil
+    return function()
+        if a == b then return a end
+        local v
+        repeat
+            v = f()
+        until v ~= last
+        last = v
+        return v
     end
 end
 

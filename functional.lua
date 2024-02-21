@@ -596,7 +596,7 @@ function functional.find_nearest(t, f, target)
 	local is_function = type(f) == "function"
 	for i = 1, #t do
 		local e = t[i]
-		local v = is_function and f(e, i) or e[f]
+		local v = ((is_function and f(e, i) or e[f]) - target)
 		if v and v < current_min then
 			current_min = v
 			current = e
