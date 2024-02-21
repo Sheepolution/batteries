@@ -58,7 +58,7 @@ end
 
 --aliases
 for _, v in ipairs({
-	{"flatten", "collapse"},
+	{ "flatten", "collapse" },
 }) do
 	sequence[v[1]] = sequence[v[2]]
 end
@@ -92,6 +92,7 @@ for _, v in ipairs({
 	"map_inplace",
 	"filter_inplace",
 	"foreach",
+	"set",
 	"reduce",
 	"any",
 	"none",
@@ -114,10 +115,10 @@ end
 
 --aliases
 for _, v in ipairs({
-	{"remap", "map_inplace"},
-	{"map_stitch", "stitch"},
-	{"map_cycle", "cycle"},
-	{"find_best", "find_max"},
+	{ "remap",      "map_inplace" },
+	{ "map_stitch", "stitch" },
+	{ "map_cycle",  "cycle" },
+	{ "find_best",  "find_max" },
 }) do
 	sequence[v[1]] = sequence[v[2]]
 end

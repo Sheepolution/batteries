@@ -20,6 +20,7 @@ print(#filtered) -- 2
 * Add alias `functional.reject` for `functional.remove_if`.
 * Add `functional.match` as altenative to `functional.find_match`.
 * Add `functional.is` to check if a value is equal to any of the given values.
+* Add `functional.set` to set one or multiple values of all elements in the table.
 
 ### tablex
 * Add alias `tablex.first` for `tablex.front`.

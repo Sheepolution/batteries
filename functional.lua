@@ -90,6 +90,26 @@ function functional.foreach(t, f)
 	return t
 end
 
+function functional.set(t, k, v, init)
+	if type(k) == "table" then
+		init = v
+		for key, x in ipairs(k) do
+			for i = 1, #t do
+				if t[i][key] ~= nil or init then
+					t[i][key] = x
+				end
+			end
+		end
+	else
+		for i = 1, #t do
+			if t[i][k] ~= nil or init then
+				t[i][k] = v
+			end
+		end
+	end
+	return t
+end
+
 --performs a left to right reduction of t using f, with seed as the initial value
 -- reduce({1, 2, 3}, 0, f) -> f(f(f(0, 1), 2), 3)
 -- (but performed iteratively, so no stack smashing)
