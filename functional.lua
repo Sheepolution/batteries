@@ -64,7 +64,7 @@ function functional.identity(v)
 end
 
 function functional.is(v, ...)
-	for i, x in ipairs({ ... }) do
+	for _, x in ipairs({ ... }) do
 		if v == x then
 			return true
 		end

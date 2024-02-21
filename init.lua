@@ -26,6 +26,7 @@ local _batteries = {
 	random = require_relative("random"),
 	--collections
 	sequence = require_relative("sequence"),
+	list = require_relative("list"),
 	set = require_relative("set"),
 	--geom
 	vec2 = require_relative("vec2"),

@@ -54,6 +54,15 @@ print(#filtered) -- 2
 * Add `random.chance` which returns true or false based on a percentage.
 * Add `random.chance_auto` which returns a function that gives a random boolean value based on the values that have appeared in previous calls.
 
+### list (new)
+* Add `list` module, which is an extension on the `sequence` module. `list` allows for simpler foreach calls.
+```lua
+local dog = Dog()
+local cat = Cat()
+local animals = list({dog, cat})
+animals:makeSound()
+```
+
 
 # Getting Started
 
