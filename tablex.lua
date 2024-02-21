@@ -753,4 +753,55 @@ function tablex.spairs(t, less)
 	end
 end
 
+-- e.g. utils.get(t, "name.position.x") returns t["name"]["position"]["x"]
+function tablex.get(t, p, make)
+	local keys = p
+	if type(p) == "string" then
+		keys = {}
+		p = p .. "."
+		for segment in p:gmatch("(.-)(%.)") do
+			keys[#keys + 1] = segment
+		end
+	end
+
+	for i, v in ipairs(keys) do
+		if i < #keys then
+			if not t[v] then
+				if make then
+					t[v] = {}
+				else
+					return nil
+				end
+			end
+			t = t[v]
+		end
+	end
+	return t[keys[#keys]]
+end
+
+-- e.g. utils.set(t, "name.position.x", 5) sets t["name"]["position"]["x"] to 5
+function tablex.set(t, p, v, make)
+	local keys = p
+	if type(p) == "string" then
+		keys = {}
+		p = p .. "."
+		for segment in p:gmatch("(.-)(%.)") do
+			keys[#keys + 1] = segment
+		end
+	end
+
+	for i = 1, #keys - 1 do
+		if not t[keys[i]] then
+			if make then
+				t[keys[i]] = {}
+			else
+				return
+			end
+		end
+		t = t[keys[i]]
+	end
+
+	t[keys[#keys]] = v
+end
+
 return tablex

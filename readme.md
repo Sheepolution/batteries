@@ -34,6 +34,7 @@ print(#filtered) -- 2
 * Add `tablex.pick_random_unique_weighted` which returns a function that gives a random value from the table based on the values that have appeared in previous calls, not equal to the previous value.
 * Add `tablex.slice` to return a slice of a table.
 * Add `tablex.mod` to apply modulo to the index of a table and return the value at that index.
+* Add `tablex.get` and `tablex.set` to get and set a variable in a table using a string path.
 
 ### mathx
 * Change `mathx.rotate` to `mathx.orbit` to free up the function name.
