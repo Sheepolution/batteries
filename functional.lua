@@ -36,7 +36,7 @@ local iscallable = function(x)
 end
 
 local getiter = function(x)
-	if functional.isarray(x) then
+	if functional.is_array(x) then
 		return ipairs
 	elseif type(x) == "table" then
 		return pairs
@@ -474,7 +474,7 @@ function functional.count(t, f)
 			if f(v) then count = count + 1 end
 		end
 	else
-		if functional.isarray(t) then
+		if functional.is_array(t) then
 			return #t
 		end
 		for _ in iter(t) do count = count + 1 end
