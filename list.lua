@@ -2,7 +2,7 @@
 	list - sequence with simpler foreach calls
 ]]
 
-local path = (...):gsub("sequence", "")
+local path = (...):gsub("list", "")
 local table = require(path .. "tablex") --shadow global table module
 local sequence = require(path .. "sequence")
 
