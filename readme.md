@@ -21,6 +21,7 @@ print(#filtered) -- 2
 * Add `functional.match` as altenative to `functional.find_match`.
 * Add `functional.is` to check if a value is equal to any of the given values.
 * Add `functional.set` to set one or multiple values of all elements in the table.
+* Add `function.contains_contents` to check if a table contains all values from a second table.
 
 ### tablex
 * Add alias `tablex.first` for `tablex.front`.

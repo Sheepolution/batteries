@@ -93,7 +93,7 @@ end
 function functional.set(t, k, v, init)
 	if type(k) == "table" then
 		init = v
-		for key, x in ipairs(k) do
+		for key, x in pairs(k) do
 			for i = 1, #t do
 				if t[i][key] ~= nil or init then
 					t[i][key] = x
@@ -241,14 +241,20 @@ end
 -- returns a table containing items where f(v) returns falsey
 -- nil results are included so that this is an exact complement of filter; consider using partition if you need both!
 function functional.remove_if(t, f)
-	local result = {}
-	for i = 1, #t do
+	f = iteratee(f)
+	local write_i = 0
+	local n = #t --cache, so splitting the sequence doesn't stop iteration
+	for i = 1, n do
 		local v = t[i]
 		if not f(v, i) then
-			table.insert(result, v)
+			write_i = write_i + 1
+			t[write_i] = v
+		end
+		if i ~= write_i then
+			t[i] = nil
 		end
 	end
-	return result
+	return t
 end
 
 --alias
@@ -520,6 +526,15 @@ function functional.contains(t, e)
 	return false
 end
 
+--true if the table contains all the elements in t2
+function functional.contains_contents(t, t2)
+	local iter = getiter(t2)
+	for _, v in iter(t2) do
+		if not functional.contains(t, v) then return false end
+	end
+	return true
+end
+
 --return the numeric sum of all elements of t
 function functional.sum(t)
 	local c = 0
@@ -583,7 +598,7 @@ function functional.find_min(t, f)
 			current = e
 		end
 	end
-	return current
+	return current, current_min
 end
 
 --return the element of the table that results in the greatest numeric value
@@ -600,7 +615,7 @@ function functional.find_max(t, f)
 			current = e
 		end
 	end
-	return current
+	return current, current_max
 end
 
 --alias
