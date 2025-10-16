@@ -250,6 +250,18 @@ function tablex.pick_random(t, r)
 	return t[tablex.random_index(t, r)]
 end
 
+--pick a random value from a table and remove it (or nil if it's empty)
+function tablex.remove_random(t, r)
+	if #t == 0 then
+		return nil
+	end
+
+	local i = tablex.random_index(t, r)
+	local v = t[i]
+	table.remove(t, i)
+	return v
+end
+
 -- alias
 tablex.random = tablex.pick_random
 
@@ -387,6 +399,37 @@ function tablex.pick_random_unique_weighted(t, decr)
 		until v ~= last
 		last = v
 		return v
+	end
+end
+
+-- returns a function that returns a random table value
+-- resets after having returned all values
+-- ensures the last item before the reset is not the same as the first item after the reset
+function tablex.pick_random_exhaust(t)
+	local copy_og = tablex.shallow_copy(t)
+	local copy = tablex.shallow_copy(t)
+	local last = nil
+	return function()
+		if #copy_og == 0 then
+			return nil
+		end
+
+		if #copy_og == 1 then
+			return copy_og[1]
+		end
+
+		if #copy == 0 then
+			copy = tablex.shallow_copy(copy_og)
+			local index
+			repeat
+				index = tablex.random_index(copy)
+			until copy[index] ~= last
+			last = table.remove(copy, index)
+			return last
+		end
+
+		last = table.remove(copy, tablex.random_index(copy))
+		return last
 	end
 end
 
@@ -775,7 +818,7 @@ function tablex.get(t, p, make)
 		keys = {}
 		p = p .. "."
 		for segment in p:gmatch("(.-)(%.)") do
-			keys[#keys + 1] = segment
+			keys[#keys + 1] = tonumber(segment) or segment
 		end
 	end
 
@@ -801,7 +844,7 @@ function tablex.set(t, p, v, make)
 		keys = {}
 		p = p .. "."
 		for segment in p:gmatch("(.-)(%.)") do
-			keys[#keys + 1] = segment
+			keys[#keys + 1] = tonumber(segment)
 		end
 	end
 

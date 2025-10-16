@@ -32,6 +32,8 @@ print(#filtered) -- 2
 * Add `tablex.pick_random_unique` which returns a function that gives a random value from the table not equal to the previous value.
 * Add `tablex.pick_weighted_random_auto` which returns a function that gives a random value from the table based on the values that have appeared in previous calls.
 * Add `tablex.pick_random_unique_weighted` which returns a function that gives a random value from the table based on the values that have appeared in previous calls, not equal to the previous value.
+* Add `tablex.remove_random` which removes a random element from a table.
+* Add `tablex.pick_random_exhaust` which removes a random element from a table, resetting the table when it is empty, with the ensurance that after the reset the same element is not picked again.
 * Add `tablex.slice` to return a slice of a table.
 * Add `tablex.mod` to apply modulo to the index of a table and return the value at that index.
 * Add `tablex.get` and `tablex.set` to get and set a variable in a table using a string path.
