@@ -32,12 +32,20 @@ setmetatable(list, {
         end
 
         self[n] = function(s, ...)
-            for i = 1, #s do
+            local a, e, r = 1, #s, 1
+            if type(n) == "string" then
+                if n:sub(-1) == "_" then
+                    a, e, r = #s, 1, -1
+                    n = n:sub(1, -2)
+                end
+            end
+
+            for i = a, e, r do
                 if s[i][n] then
                     s[i][n](s[i], ...)
                 else
                     if rawget(self, "__strict") then
-                        error("Method " .. n .. " not found in object " .. i)
+                        error("Method " .. n .. " not found in object " .. s[i] .. " (#" .. i .. ")")
                     end
                 end
             end
