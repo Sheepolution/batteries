@@ -188,6 +188,20 @@ function tablex.next_element(t, v)
 	return t[i]
 end
 
+function tablex.previous_element(t, v)
+	local i = tablex.index_of(t, v)
+	--not present? just get the front of the table
+	if not i then
+		return tablex.front(t)
+	end
+	--(not using mathx to avoid inter-dependency)
+	i = i - 1
+	if i == 0 then
+		i = #t
+	end
+	return t[i]
+end
+
 local absindex = function(len, i)
 	return i < 0 and (len + i + 1) or i
 end
@@ -205,6 +219,7 @@ function tablex.slice(t, i, j)
 	end
 	return rtn
 end
+
 
 --note: keyed versions of the above aren't required; you can't double
 --up values under keys

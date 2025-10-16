@@ -118,6 +118,9 @@ function vec2.nequals(a, b)
 	)
 end
 
+--alias
+vec2.not_equals = vec2.nequals
+
 -----------------------------------------------------------
 --arithmetic
 -----------------------------------------------------------
@@ -408,6 +411,11 @@ end
 function vec2.winding_side(a, b, p)
 	return (b.x - a.x) * (p.y - a.y)
 		 - (p.x - a.x) * (b.y - a.y)
+end
+
+--return whether a is nearer to v than b
+function vec2.nearer(v, a, b)
+	return v:distance_squared(a) < v:distance_squared(b)
 end
 
 -----------------------------------------------------------

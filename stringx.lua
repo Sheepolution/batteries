@@ -49,18 +49,20 @@ function stringx.split(self, delim, limit)
 			for j = 2, delim_length do
 				if self:byte(i + j - 1) ~= delim:byte(j) then
 					has_whole_delim = false
+					--step forward as far as we got
+					i = i + j
 					break
 				end
 			end
 			if has_whole_delim then
 				if #res < limit then
 					table.insert(res, i)
+					--iterate forward the whole delimiter
+					i = i + delim_length
 				else
 					break
 				end
 			end
-			--iterate forward
-			i = i + delim_length
 		else
 			--iterate forward
 			i = i + 1
@@ -223,7 +225,7 @@ stringx.dedent = stringx.deindent
 
 --apply a template to a string
 --supports $template style values, given as a table or function
--- ie ("hello $name"):format({name = "tom"}) == "hello tom"
+-- ie ("hello $name"):apply_template({name = "tom"}) == "hello tom"
 function stringx.apply_template(s, sub)
 	local r = s:gsub("%$([%w_]+)", sub)
 	return r

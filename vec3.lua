@@ -73,7 +73,7 @@ end
 function vec3:sset(x, y, z)
 	self.x = x
 	self.y = y or x
-	self.z = z or y or z
+	self.z = z or y or x
 	return self
 end
 
@@ -328,6 +328,9 @@ end
 --rotate around a swizzle
 --todo: angle-axis version
 function vec3:rotatei(swizzle, angle)
+	if angle == 0 then --early out
+		return self
+	end
 	local v = vec2:pooled()
 	self:extract_vec2(swizzle, v)
 	v:rotatei(angle)
@@ -336,19 +339,10 @@ function vec3:rotatei(swizzle, angle)
 	return self
 end
 
-local _euler_macro = {
-	"yz",
-	"xz",
-	"xy",
-}
 function vec3:rotate_euleri(angle_x_axis, angle_y_axis, angle_z_axis)
-	for i, swizzle in ipairs(_euler_macro) do
-		local angle =
-			i == 1 and angle_x_axis
-			or i == 2 and angle_y_axis
-			or i == 3 and angle_z_axis
-		self:rotatei(swizzle, angle)
-	end
+	self:rotatei("yz", angle_x_axis)
+	self:rotatei("xz", angle_y_axis)
+	self:rotatei("xy", angle_z_axis)
 	return self
 end
 
@@ -517,13 +511,18 @@ function vec3.dot(a, b)
 	return a.x * b.x + a.y * b.y + a.z * b.z
 end
 
-function vec3.cross(a, b, into)
-	if not into then into = vec3:zero() end
-	return into:sset(
+function vec3.crossi(a, b)
+	return a:sset(
 		a.y * b.z - a.z * b.y,
 		a.z * b.x - a.x * b.z,
 		a.x * b.y - a.y * b.x
 	)
+end
+
+vec3.cross_inplace = vec3.crossi
+
+function vec3:cross(b, into)
+	(into or self:copy()):crossi(b)
 end
 
 --scalar projection a onto b

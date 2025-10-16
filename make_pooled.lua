@@ -30,18 +30,23 @@ return function(class, limit)
 	--get a pooled object
 	--(re-initialised with new, or freshly constructed if the pool was empty)
 	function class:pooled(...)
-		if #_pool == 0 then
+		local instance = class:drain_pool()
+		if not instance then
 			return class(...)
 		end
-		local instance = class:drain_pool()
 		instance:new(...)
 		return instance
 	end
 
 	--release an object back to the pool
-	function class:release()
+	function class.release(instance, ...)
+		assert(instance:type() == class:type(), "wrong class released to pool")
 		if #_pool < _pool_limit then
-			table.insert(_pool, self)
+			table.insert(_pool, instance)
+		end
+		--recurse
+		if ... then
+			return class.release(...)
 		end
 	end
 end

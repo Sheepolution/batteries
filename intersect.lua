@@ -521,8 +521,8 @@ end
 -- returns false if we're colliding two static bodies, as that's invalid
 function intersect.balance_from_mass(a_mass, b_mass)
 	--static cases
-	local a_static = a_mass <= 0 or a_mass == math.huge or not a_mass
-	local b_static = b_mass <= 0 or b_mass == math.huge or not a_mass
+	local a_static = not a_mass or a_mass <= 0 or a_mass == math.huge
+	local b_static = not b_mass or b_mass <= 0 or b_mass == math.huge
 	if a_static and b_static then
 		return false --colliding two static bodies
 	elseif a_static then
@@ -533,7 +533,7 @@ function intersect.balance_from_mass(a_mass, b_mass)
 
 	--get balance factor
 	local total = a_mass + b_mass
-	return a_mass / total
+	return b_mass / total
 end
 
 --bounce a velocity off of a normal (modifying velocity)

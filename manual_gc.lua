@@ -26,10 +26,10 @@
 		adjust down or up as needed. games that generate more garbage
 		will need to spend longer on gc each frame.
 
-	memory_ceiling - 64mb
-		a good place to start, though some games will need much more.
-		remember, this is lua memory, not the total memory consumption
-		of your game.
+	memory_ceiling - unlimited
+		a good place to start might be something like 64mb, though some games
+		will need much more. remember, this is lua memory, not the total memory
+		consumption of your game.
 
 	disable_otherwise - false
 		disabling the gc completely is dangerous - any big allocation
@@ -48,7 +48,9 @@ return function(time_budget, memory_ceiling, disable_otherwise)
 		love.timer.getTime() - start_time < time_budget and
 		steps < max_steps
 	do
-		collectgarbage("step", 1)
+		if collectgarbage("step", 1) then
+			break
+		end
 		steps = steps + 1
 	end
 	--safety net
