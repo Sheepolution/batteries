@@ -158,6 +158,10 @@ end
 --superior constant handy for expressing things in turns
 mathx.tau = math.pi * 2
 
+function mathx.angle(x1, y1, x2, y2)
+	return math.atan2(y2 - y1, x2 - x1)
+end
+
 --normalise angle onto the interval [-math.pi, math.pi)
 --so each angle only has a single value representing it
 function mathx.normalise_angle(a)

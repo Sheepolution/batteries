@@ -42,6 +42,7 @@ print(#filtered) -- 2
 * Change `mathx.rotate` to `mathx.orbit` to free up the function name.
 * Add new `mathx.rotate` to move an angle towards another angle
 * Add `mathx.mod` to return the modulo from 1 to max + 1 rather than 0 to max.
+* Add `mathx.angle` to get the angle between two points
 
 ### stringx
 * Add `stringx.interpolate` to interpolate a string with a table.
