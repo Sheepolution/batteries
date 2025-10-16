@@ -19,7 +19,7 @@ local function _random(rng, ...)
 end
 
 setmetatable(random, {
-    __call = function(a, b, int)
+    __call = function(self, a, b, int)
         if not b then
             if a == true then
                 -- random boolean
@@ -28,7 +28,7 @@ setmetatable(random, {
 
             if type(a) == "table" then
                 -- random table element
-                return a[_random(1, #a)]
+                return a[_random(nil, 1, #a)]
             end
         end
 
@@ -66,8 +66,8 @@ function random.float(a, b, rng)
 end
 
 --return a random sign
-function random.sign(rng)
-    return _random(rng) < 0.5 and -1 or 1
+function random.sign(v, rng)
+    return (_random(rng) < 0.5 and -1 or 1) * (v or 1)
 end
 
 --return a random value between two numbers (continuous)
@@ -123,45 +123,56 @@ function random.weighted(w, rng)
         sum = sum + v
     end
     assert(sum ~= 0, "all weights are zero")
-    local rnd = _random(rng, sum)
+    local rnd = random(sum)
+    local last_key
     for k, v in iter(w) do
+        last_key = k
         if rnd < v then return k end
         rnd = rnd - v
     end
+    return last_key
 end
 
 --return a function that returns a random integer between two integers (inclusive)
 --but decreasing the chance of the same value reappearing
 function random.weighted_auto(a, b, decr, rng)
     local weights = {}
-    local total = 0
     local last = nil
     decr = decr or 0.5
+    local min_weight = 0.01
 
     for i = a, b do
         weights[i] = 1
-        total = total + weights[i]
     end
 
     return function()
         if a == b then return a end
+
+        local total = 0
+        for i = a, b do
+            total = total + weights[i]
+        end
+
         if last then
-            local decrease_amount = weights[last] * decr
-            weights[last] = weights[last] - decrease_amount
-            total = total - decrease_amount
+            local decrease_amount = math.max(weights[last] * decr, min_weight)
+            weights[last] = math.max(weights[last] - decrease_amount, min_weight)
 
             local distribute_amount = decrease_amount / (b - a)
             for i = a, b do
                 if i ~= last then
                     weights[i] = weights[i] + distribute_amount
-                    total = total + distribute_amount
                 end
             end
         end
 
+        total = 0
+        for i = a, b do
+            total = total + weights[i]
+        end
+
         local rand = _random(rng, total)
         local sum = 0
-        local value
+        local value = a -- In case of errors, use this
 
         for i = a, b do
             sum = sum + weights[i]
@@ -172,7 +183,6 @@ function random.weighted_auto(a, b, decr, rng)
         end
 
         last = value
-
         return value
     end
 end
@@ -204,3 +214,5 @@ function random.chance_auto(decr, rng)
         return f() == 0
     end
 end
+
+return random
